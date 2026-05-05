@@ -18,6 +18,9 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as ReceiptRefRouteImport } from './routes/receipt.$ref'
+import { Route as AdminRsvpsRouteImport } from './routes/admin.rsvps'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminDonationsRouteImport } from './routes/admin.donations'
 
 const ParikramaRoute = ParikramaRouteImport.update({
   id: '/parikrama',
@@ -64,6 +67,21 @@ const ReceiptRefRoute = ReceiptRefRouteImport.update({
   path: '/receipt/$ref',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRsvpsRoute = AdminRsvpsRouteImport.update({
+  id: '/rsvps',
+  path: '/rsvps',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDonationsRoute = AdminDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -73,6 +91,9 @@ export interface FileRoutesByFullPath {
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
   '/receipt/$ref': typeof ReceiptRefRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -83,6 +104,9 @@ export interface FileRoutesByTo {
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
   '/receipt/$ref': typeof ReceiptRefRoute
   '/admin': typeof AdminIndexRoute
 }
@@ -95,6 +119,9 @@ export interface FileRoutesById {
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
   '/receipt/$ref': typeof ReceiptRefRoute
   '/admin/': typeof AdminIndexRoute
 }
@@ -108,6 +135,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/history'
     | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
     | '/receipt/$ref'
     | '/admin/'
   fileRoutesByTo: FileRoutesByTo
@@ -118,6 +148,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/history'
     | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
     | '/receipt/$ref'
     | '/admin'
   id:
@@ -129,6 +162,9 @@ export interface FileRouteTypes {
     | '/gallery'
     | '/history'
     | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
     | '/receipt/$ref'
     | '/admin/'
   fileRoutesById: FileRoutesById
@@ -209,14 +245,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ReceiptRefRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/rsvps': {
+      id: '/admin/rsvps'
+      path: '/rsvps'
+      fullPath: '/admin/rsvps'
+      preLoaderRoute: typeof AdminRsvpsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/donations': {
+      id: '/admin/donations'
+      path: '/donations'
+      fullPath: '/admin/donations'
+      preLoaderRoute: typeof AdminDonationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
 interface AdminRouteChildren {
+  AdminDonationsRoute: typeof AdminDonationsRoute
+  AdminEventsRoute: typeof AdminEventsRoute
+  AdminRsvpsRoute: typeof AdminRsvpsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminDonationsRoute: AdminDonationsRoute,
+  AdminEventsRoute: AdminEventsRoute,
+  AdminRsvpsRoute: AdminRsvpsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
