@@ -9,10 +9,16 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ParikramaRouteImport } from './routes/parikrama'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as IndexRouteImport } from './routes/index'
 
+const ParikramaRoute = ParikramaRouteImport.update({
+  id: '/parikrama',
+  path: '/parikrama',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HistoryRoute = HistoryRouteImport.update({
   id: '/history',
   path: '/history',
@@ -33,34 +39,45 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/gallery' | '/history'
+  fullPaths: '/' | '/gallery' | '/history' | '/parikrama'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/gallery' | '/history'
-  id: '__root__' | '/' | '/gallery' | '/history'
+  to: '/' | '/gallery' | '/history' | '/parikrama'
+  id: '__root__' | '/' | '/gallery' | '/history' | '/parikrama'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GalleryRoute: typeof GalleryRoute
   HistoryRoute: typeof HistoryRoute
+  ParikramaRoute: typeof ParikramaRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/parikrama': {
+      id: '/parikrama'
+      path: '/parikrama'
+      fullPath: '/parikrama'
+      preLoaderRoute: typeof ParikramaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/history': {
       id: '/history'
       path: '/history'
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GalleryRoute: GalleryRoute,
   HistoryRoute: HistoryRoute,
+  ParikramaRoute: ParikramaRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
