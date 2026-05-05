@@ -14,16 +14,241 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      admin_whitelist: {
+        Row: {
+          created_at: string
+          email: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+        }
+        Relationships: []
+      }
+      donations: {
+        Row: {
+          amount: number
+          cause: Database["public"]["Enums"]["donation_cause"]
+          created_at: string
+          currency: string
+          dedication: string | null
+          donor_email: string
+          donor_name: string
+          id: string
+          paid_at: string | null
+          reference_id: string
+          status: Database["public"]["Enums"]["donation_status"]
+          stripe_session_id: string | null
+        }
+        Insert: {
+          amount: number
+          cause?: Database["public"]["Enums"]["donation_cause"]
+          created_at?: string
+          currency?: string
+          dedication?: string | null
+          donor_email: string
+          donor_name: string
+          id?: string
+          paid_at?: string | null
+          reference_id?: string
+          status?: Database["public"]["Enums"]["donation_status"]
+          stripe_session_id?: string | null
+        }
+        Update: {
+          amount?: number
+          cause?: Database["public"]["Enums"]["donation_cause"]
+          created_at?: string
+          currency?: string
+          dedication?: string | null
+          donor_email?: string
+          donor_name?: string
+          id?: string
+          paid_at?: string | null
+          reference_id?: string
+          status?: Database["public"]["Enums"]["donation_status"]
+          stripe_session_id?: string | null
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          created_at: string
+          description_en: string | null
+          description_hi: string | null
+          event_date: string
+          event_time: string | null
+          featured: boolean
+          id: string
+          published: boolean
+          title_en: string
+          title_hi: string | null
+          type: Database["public"]["Enums"]["event_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description_en?: string | null
+          description_hi?: string | null
+          event_date: string
+          event_time?: string | null
+          featured?: boolean
+          id?: string
+          published?: boolean
+          title_en: string
+          title_hi?: string | null
+          type?: Database["public"]["Enums"]["event_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description_en?: string | null
+          description_hi?: string | null
+          event_date?: string
+          event_time?: string | null
+          featured?: boolean
+          id?: string
+          published?: boolean
+          title_en?: string
+          title_hi?: string | null
+          type?: Database["public"]["Enums"]["event_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      gallery_items: {
+        Row: {
+          category: Database["public"]["Enums"]["gallery_category"]
+          created_at: string
+          description_en: string | null
+          description_hi: string | null
+          id: string
+          media_url: string
+          published: boolean
+          sort_order: number
+          thumbnail_url: string | null
+          title_en: string
+          title_hi: string | null
+          type: Database["public"]["Enums"]["media_type"]
+          updated_at: string
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["gallery_category"]
+          created_at?: string
+          description_en?: string | null
+          description_hi?: string | null
+          id?: string
+          media_url: string
+          published?: boolean
+          sort_order?: number
+          thumbnail_url?: string | null
+          title_en: string
+          title_hi?: string | null
+          type?: Database["public"]["Enums"]["media_type"]
+          updated_at?: string
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["gallery_category"]
+          created_at?: string
+          description_en?: string | null
+          description_hi?: string | null
+          id?: string
+          media_url?: string
+          published?: boolean
+          sort_order?: number
+          thumbnail_url?: string | null
+          title_en?: string
+          title_hi?: string | null
+          type?: Database["public"]["Enums"]["media_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      rsvps: {
+        Row: {
+          created_at: string
+          device_id: string | null
+          email: string
+          event_id: string
+          guests: number
+          id: string
+          name: string
+          phone: string | null
+        }
+        Insert: {
+          created_at?: string
+          device_id?: string | null
+          email: string
+          event_id: string
+          guests?: number
+          id?: string
+          name: string
+          phone?: string | null
+        }
+        Update: {
+          created_at?: string
+          device_id?: string | null
+          email?: string
+          event_id?: string
+          guests?: number
+          id?: string
+          name?: string
+          phone?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rsvps_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
+      donation_cause: "annakshetra" | "maintenance" | "goshala" | "general"
+      donation_status: "pending" | "paid" | "failed"
+      event_type: "utsav" | "purnima" | "amavasya" | "ekadashi" | "other"
+      gallery_category: "utsavs" | "darshan" | "meera_mai"
+      media_type: "image" | "video"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +375,13 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+      donation_cause: ["annakshetra", "maintenance", "goshala", "general"],
+      donation_status: ["pending", "paid", "failed"],
+      event_type: ["utsav", "purnima", "amavasya", "ekadashi", "other"],
+      gallery_category: ["utsavs", "darshan", "meera_mai"],
+      media_type: ["image", "video"],
+    },
   },
 } as const
