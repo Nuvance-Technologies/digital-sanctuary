@@ -12,8 +12,10 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ParikramaRouteImport } from './routes/parikrama'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as DonateRouteImport } from './routes/donate'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ReceiptRefRouteImport } from './routes/receipt.$ref'
 
 const ParikramaRoute = ParikramaRouteImport.update({
   id: '/parikrama',
@@ -30,6 +32,11 @@ const GalleryRoute = GalleryRouteImport.update({
   path: '/gallery',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CalendarRoute = CalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
@@ -40,43 +47,78 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ReceiptRefRoute = ReceiptRefRouteImport.update({
+  id: '/receipt/$ref',
+  path: '/receipt/$ref',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
   '/gallery': typeof GalleryRoute
   '/history': typeof HistoryRoute
   '/parikrama': typeof ParikramaRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calendar' | '/gallery' | '/history' | '/parikrama'
+  fullPaths:
+    | '/'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/receipt/$ref'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calendar' | '/gallery' | '/history' | '/parikrama'
-  id: '__root__' | '/' | '/calendar' | '/gallery' | '/history' | '/parikrama'
+  to:
+    | '/'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/receipt/$ref'
+  id:
+    | '__root__'
+    | '/'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/receipt/$ref'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarRoute: typeof CalendarRoute
+  DonateRoute: typeof DonateRoute
   GalleryRoute: typeof GalleryRoute
   HistoryRoute: typeof HistoryRoute
   ParikramaRoute: typeof ParikramaRoute
+  ReceiptRefRoute: typeof ReceiptRefRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -102,6 +144,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GalleryRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/calendar': {
       id: '/calendar'
       path: '/calendar'
@@ -116,15 +165,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/receipt/$ref': {
+      id: '/receipt/$ref'
+      path: '/receipt/$ref'
+      fullPath: '/receipt/$ref'
+      preLoaderRoute: typeof ReceiptRefRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarRoute: CalendarRoute,
+  DonateRoute: DonateRoute,
   GalleryRoute: GalleryRoute,
   HistoryRoute: HistoryRoute,
   ParikramaRoute: ParikramaRoute,
+  ReceiptRefRoute: ReceiptRefRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
