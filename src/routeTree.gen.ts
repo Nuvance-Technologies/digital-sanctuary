@@ -9,38 +9,221 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ParikramaRouteImport } from './routes/parikrama'
+import { Route as HistoryRouteImport } from './routes/history'
+import { Route as GalleryRouteImport } from './routes/gallery'
+import { Route as DonateRouteImport } from './routes/donate'
+import { Route as CalendarRouteImport } from './routes/calendar'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as ReceiptRefRouteImport } from './routes/receipt.$ref'
+import { Route as AdminRsvpsRouteImport } from './routes/admin.rsvps'
+import { Route as AdminEventsRouteImport } from './routes/admin.events'
+import { Route as AdminDonationsRouteImport } from './routes/admin.donations'
 
+const ParikramaRoute = ParikramaRouteImport.update({
+  id: '/parikrama',
+  path: '/parikrama',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HistoryRoute = HistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DonateRoute = DonateRouteImport.update({
+  id: '/donate',
+  path: '/donate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const ReceiptRefRoute = ReceiptRefRouteImport.update({
+  id: '/receipt/$ref',
+  path: '/receipt/$ref',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRsvpsRoute = AdminRsvpsRouteImport.update({
+  id: '/rsvps',
+  path: '/rsvps',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminEventsRoute = AdminEventsRouteImport.update({
+  id: '/events',
+  path: '/events',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminDonationsRoute = AdminDonationsRouteImport.update({
+  id: '/donations',
+  path: '/donations',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
+  '/gallery': typeof GalleryRoute
+  '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
+  '/gallery': typeof GalleryRoute
+  '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
+  '/admin': typeof AdminIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRouteWithChildren
+  '/calendar': typeof CalendarRoute
+  '/donate': typeof DonateRoute
+  '/gallery': typeof GalleryRoute
+  '/history': typeof HistoryRoute
+  '/parikrama': typeof ParikramaRoute
+  '/admin/donations': typeof AdminDonationsRoute
+  '/admin/events': typeof AdminEventsRoute
+  '/admin/rsvps': typeof AdminRsvpsRoute
+  '/receipt/$ref': typeof ReceiptRefRoute
+  '/admin/': typeof AdminIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
+    | '/receipt/$ref'
+    | '/admin/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
+    | '/receipt/$ref'
+    | '/admin'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/calendar'
+    | '/donate'
+    | '/gallery'
+    | '/history'
+    | '/parikrama'
+    | '/admin/donations'
+    | '/admin/events'
+    | '/admin/rsvps'
+    | '/receipt/$ref'
+    | '/admin/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRouteWithChildren
+  CalendarRoute: typeof CalendarRoute
+  DonateRoute: typeof DonateRoute
+  GalleryRoute: typeof GalleryRoute
+  HistoryRoute: typeof HistoryRoute
+  ParikramaRoute: typeof ParikramaRoute
+  ReceiptRefRoute: typeof ReceiptRefRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/parikrama': {
+      id: '/parikrama'
+      path: '/parikrama'
+      fullPath: '/parikrama'
+      preLoaderRoute: typeof ParikramaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/history': {
+      id: '/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof HistoryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/donate': {
+      id: '/donate'
+      path: '/donate'
+      fullPath: '/donate'
+      preLoaderRoute: typeof DonateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +231,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/receipt/$ref': {
+      id: '/receipt/$ref'
+      path: '/receipt/$ref'
+      fullPath: '/receipt/$ref'
+      preLoaderRoute: typeof ReceiptRefRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/rsvps': {
+      id: '/admin/rsvps'
+      path: '/rsvps'
+      fullPath: '/admin/rsvps'
+      preLoaderRoute: typeof AdminRsvpsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/events': {
+      id: '/admin/events'
+      path: '/events'
+      fullPath: '/admin/events'
+      preLoaderRoute: typeof AdminEventsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/donations': {
+      id: '/admin/donations'
+      path: '/donations'
+      fullPath: '/admin/donations'
+      preLoaderRoute: typeof AdminDonationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
+interface AdminRouteChildren {
+  AdminDonationsRoute: typeof AdminDonationsRoute
+  AdminEventsRoute: typeof AdminEventsRoute
+  AdminRsvpsRoute: typeof AdminRsvpsRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminDonationsRoute: AdminDonationsRoute,
+  AdminEventsRoute: AdminEventsRoute,
+  AdminRsvpsRoute: AdminRsvpsRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRouteWithChildren,
+  CalendarRoute: CalendarRoute,
+  DonateRoute: DonateRoute,
+  GalleryRoute: GalleryRoute,
+  HistoryRoute: HistoryRoute,
+  ParikramaRoute: ParikramaRoute,
+  ReceiptRefRoute: ReceiptRefRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
