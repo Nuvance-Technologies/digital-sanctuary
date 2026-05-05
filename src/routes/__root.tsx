@@ -67,5 +67,15 @@ function RootShell({ children }: { children: React.ReactNode }) {
 }
 
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <I18nProvider>
+      <SiteHeader />
+      <main className="relative">
+        <NarmadaSpline />
+        <Outlet />
+      </main>
+      <SiteFooter />
+      <Toaster richColors position="top-center" />
+    </I18nProvider>
+  );
 }
