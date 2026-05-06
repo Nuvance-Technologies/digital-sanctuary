@@ -1,8 +1,8 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { useI18n } from "@/lib/i18n";
-import { supabase } from "@/integrations/supabase/client";
+import { useServerFn } from "@tanstack/react-start";
+import { createDonationCheckout } from "@/server/stripe.functions";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { VirtualDiya } from "@/components/VirtualDiya";
-import { Flame, Share2, Receipt, Copy } from "lucide-react";
+import { Flame } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/donate")({
@@ -39,7 +39,13 @@ function DonatePage() {
   const [email, setEmail] = useState("");
   const [dedication, setDedication] = useState("");
   const [busy, setBusy] = useState(false);
-  const [success, setSuccess] = useState<{ ref: string; amount: number; dedication: string } | null>(null);
+  const checkout = useServerFn(createDonationCheckout);
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && new URLSearchParams(window.location.search).get("canceled")) {
+      toast.info(lang === "hi" ? "भुगतान रद्द किया गया" : "Payment canceled");
+    }
+  }, [lang]);
 
   const submit = async () => {
     if (!name.trim() || !email.trim() || amount < 1) {
@@ -47,29 +53,23 @@ function DonatePage() {
       return;
     }
     setBusy(true);
-    // Simulation mode: insert as paid immediately. When Stripe is added, set status='pending', call Checkout, then poll.
-    const { data, error } = await supabase
-      .from("donations")
-      .insert({
-        cause,
-        amount,
-        donor_name: name.trim(),
-        donor_email: email.trim(),
-        dedication: dedication.trim() || null,
-        status: "paid",
-        paid_at: new Date().toISOString(),
-      })
-      .select("reference_id, amount, dedication")
-      .single();
-    setBusy(false);
-    if (error || !data) {
-      toast.error(error?.message ?? "Failed");
-      return;
+    try {
+      const { url } = await checkout({
+        data: {
+          cause,
+          amount,
+          currency: "INR",
+          donor_name: name.trim(),
+          donor_email: email.trim(),
+          dedication: dedication.trim() || null,
+        },
+      });
+      window.location.href = url;
+    } catch (e: any) {
+      setBusy(false);
+      toast.error(e?.message ?? "Could not start checkout");
     }
-    setSuccess({ ref: data.reference_id, amount: Number(data.amount), dedication: data.dedication ?? "" });
   };
-
-  if (success) return <SuccessView data={success} />;
 
   return (
     <div className="px-4">
@@ -131,65 +131,14 @@ function DonatePage() {
           </div>
 
           <Button onClick={submit} disabled={busy} size="lg" className="mt-4 w-full bg-primary text-primary-foreground hover:bg-primary/90">
-            <Flame className="mr-2 h-4 w-4" /> {t("donate_offer")}
+            <Flame className="mr-2 h-4 w-4" /> {busy ? (lang === "hi" ? "आगे बढ़ रहा है…" : "Redirecting…") : t("donate_offer")}
           </Button>
           <p className="mt-3 text-center text-xs text-muted-foreground">
             {lang === "hi"
-              ? "अभी सिमुलेशन मोड (UPI/Stripe परीक्षण)। वास्तविक भुगतान शीघ्र सक्रिय होगा।"
-              : "Currently in simulation mode. Real Stripe payments activate when keys are added."}
+              ? "सुरक्षित भुगतान Stripe द्वारा। आपकी दीप तभी प्रज्वलित होगी जब भुगतान पुष्टि होगी।"
+              : "Secure payment by Stripe. Your diya lights only after payment is confirmed."}
           </p>
         </Card>
-      </section>
-    </div>
-  );
-}
-
-function SuccessView({ data }: { data: { ref: string; amount: number; dedication: string } }) {
-  const { t, lang } = useI18n();
-
-  const share = async () => {
-    const url = `${window.location.origin}/receipt/${data.ref}`;
-    const text = `${lang === "hi" ? "मैंने श्री मीरा माई आश्रम को दान अर्पित किया।" : "I offered daan to Shri Meera Mai Ashram."} 🪔 ${url}`;
-    if (navigator.share) {
-      try { await navigator.share({ title: "Daan — Shri Meera Mai Ashram", text, url }); } catch {}
-    } else {
-      await navigator.clipboard.writeText(text);
-      toast.success("Copied!");
-    }
-  };
-
-  return (
-    <div className="px-4">
-      <section className="mx-auto max-w-2xl pt-16 pb-32 text-center">
-        <AnimatePresence>
-          <motion.div initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8 }}>
-            <VirtualDiya amount={data.amount} size={280} />
-            <motion.h1
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4, duration: 0.6 }}
-              className="mt-8 font-serif text-4xl md:text-5xl"
-            >
-              {t("diya_success")}
-            </motion.h1>
-            <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.7 }} className="mt-3 text-muted-foreground">
-              {lang === "hi" ? "आपकी श्रद्धा माँ नर्मदा तक पहुँच गई है।" : "Your offering has reached Maa Narmada."}
-            </motion.p>
-            {data.dedication && (
-              <p className="mt-4 font-serif text-lg italic text-primary">"{data.dedication}"</p>
-            )}
-            <div className="mt-6 inline-flex items-center gap-2 rounded-full glass px-4 py-2 text-sm">
-              <Receipt className="h-4 w-4" /> {data.ref} · ₹{data.amount}
-            </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <Button asChild className="bg-primary text-primary-foreground hover:bg-primary/90">
-                <Link to="/receipt/$ref" params={{ ref: data.ref }}><Receipt className="mr-2 h-4 w-4" />{lang === "hi" ? "रसीद देखें" : "View Receipt"}</Link>
-              </Button>
-              <Button variant="outline" className="glass" onClick={share}><Share2 className="mr-2 h-4 w-4" />{lang === "hi" ? "साझा करें" : "Share"}</Button>
-              <Button variant="outline" className="glass" onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/receipt/${data.ref}`); toast.success("Link copied"); }}><Copy className="mr-2 h-4 w-4" />Link</Button>
-            </div>
-          </motion.div>
-        </AnimatePresence>
       </section>
     </div>
   );
