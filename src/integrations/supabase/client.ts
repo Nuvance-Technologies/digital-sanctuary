@@ -3,10 +3,18 @@ import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
 function createSupabaseClient() {
-  // Use import.meta.env for client-side (Vite build-time replacement)
-  // Fall back to process.env for SSR (server-side rendering)
-  const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL || process.env.SUPABASE_URL;
-  const SUPABASE_PUBLISHABLE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.SUPABASE_PUBLISHABLE_KEY;
+  // BYO override: set VITE_BYO_SUPABASE_URL + VITE_BYO_SUPABASE_ANON_KEY (and BYO_* on the server)
+  // to point this app at your own Supabase project. Falls back to Lovable Cloud values otherwise.
+  const SUPABASE_URL =
+    import.meta.env.VITE_BYO_SUPABASE_URL ||
+    import.meta.env.VITE_SUPABASE_URL ||
+    process.env.BYO_SUPABASE_URL ||
+    process.env.SUPABASE_URL;
+  const SUPABASE_PUBLISHABLE_KEY =
+    import.meta.env.VITE_BYO_SUPABASE_ANON_KEY ||
+    import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.BYO_SUPABASE_ANON_KEY ||
+    process.env.SUPABASE_PUBLISHABLE_KEY;
 
   if (!SUPABASE_URL || !SUPABASE_PUBLISHABLE_KEY) {
     const missing = [
