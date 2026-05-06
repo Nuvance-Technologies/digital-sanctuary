@@ -32,6 +32,7 @@ export type Database = {
       donations: {
         Row: {
           amount: number
+          amount_total: number | null
           cause: Database["public"]["Enums"]["donation_cause"]
           created_at: string
           currency: string
@@ -42,10 +43,12 @@ export type Database = {
           paid_at: string | null
           reference_id: string
           status: Database["public"]["Enums"]["donation_status"]
+          stripe_payment_intent: string | null
           stripe_session_id: string | null
         }
         Insert: {
           amount: number
+          amount_total?: number | null
           cause?: Database["public"]["Enums"]["donation_cause"]
           created_at?: string
           currency?: string
@@ -56,10 +59,12 @@ export type Database = {
           paid_at?: string | null
           reference_id?: string
           status?: Database["public"]["Enums"]["donation_status"]
+          stripe_payment_intent?: string | null
           stripe_session_id?: string | null
         }
         Update: {
           amount?: number
+          amount_total?: number | null
           cause?: Database["public"]["Enums"]["donation_cause"]
           created_at?: string
           currency?: string
@@ -70,6 +75,7 @@ export type Database = {
           paid_at?: string | null
           reference_id?: string
           status?: Database["public"]["Enums"]["donation_status"]
+          stripe_payment_intent?: string | null
           stripe_session_id?: string | null
         }
         Relationships: []
